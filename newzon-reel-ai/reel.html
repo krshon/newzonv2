@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEWZON Reel Political Analyzer</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0e0e0e;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .analyze-box {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            width: 420px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #ff0050;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: #1c1c1c;
+            border-radius: 10px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            display: none;
+        }
+
+        /* FIXED container */
+        .reel-preview {
+            width: 60%;
+            margin: 20px auto;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* FIXED BADGE (100% Visible Always) */
+        .reel-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 22px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
+            border: 2px solid rgba(255,255,255,0.4);
+            z-index: 9999;
+            text-transform: uppercase;
+            display: none;
+            background: rgba(100,100,100,0.9); /* fallback */
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🎬 NEWZON Reel Political Analyzer</h1>
+
+<div class="analyze-box">
+    <h3>Select a Reel (MP4):</h3>
+    <input type="file" id="reelFile" accept="video/mp4">
+    <button onclick="analyzeReel()">Analyze Reel</button>
+</div>
+
+<div class="reel-preview">
+    <video id="previewVideo" controls></video>
+    <div id="reelLabel" class="reel-badge">LOADING...</div>
+</div>
+
+<div id="analysisResult" class="result-box"></div>
+
+<script>
+async function analyzeReel() {
+    const fileInput = document.getElementById("reelFile");
+    const videoElement = document.getElementById("previewVideo");
+    const badge = document.getElementById("reelLabel");
+    const resultBox = document.getElementById("analysisResult");
+
+    if (!fileInput.files[0]) {
+        alert("Please choose a video file.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+
+    // Show preview
+    videoElement.src = URL.createObjectURL(file);
+
+    // Show the badge once video loads
+    videoElement.onloadeddata = () => {
+        badge.style.display = "inline-block";
+        badge.textContent = "Analyzing...";
+        badge.style.background = "rgba(100, 100, 100, 0.85)";
+    };
+
+    const form = new FormData();
+    form.append("file", file);
+
+    const res = await fetch("http://127.0.0.1:8000/upload", {
+        method: "POST",
+        body: form
+    });
+
+    const data = await res.json();
+
+    console.log("FULL API RESPONSE:", data);
+    alert("API Response:\n\n" + JSON.stringify(data, null, 2));
+
+    // FIX: adapt automatically to backend format
+    const reel = data.reel ? data.reel : data;
+
+    console.log("FINAL Reel Object:", reel);
+
+    // Show label
+    badge.style.display = "inline-block";
+    badge.textContent = reel.label || "NO LABEL";
+
+    // Badge colors
+    if (reel.label === "Left Wing") {
+        badge.style.background = "rgba(0, 102, 255, 0.85)";
+    }
+    else if (reel.label === "Right Wing") {
+        badge.style.background = "rgba(255, 0, 0, 0.85)";
+    }
+    else if (reel.label === "Center") {
+        badge.style.background = "rgba(255, 215, 0, 0.85)";
+    }
+    else {
+        badge.style.background = "rgba(100, 100, 100, 0.9)";
+    }
+
+    // Show details
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+        <h3>AI Analysis Result</h3>
+
+        <strong>Political Label:</strong> ${reel.label || "Unknown"}<br>
+        <strong>Confidence:</strong> ${ reel.scores ? (Math.max(...reel.scores) * 100).toFixed(2) : "N/A" }%<br><br>
+
+        <strong>Transcript:</strong><br>
+        ${ reel.text ? reel.text.slice(0, 500) : "No transcript available." }
+    `;
+}
+</script>
+
+</body>
+</html>

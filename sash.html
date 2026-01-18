@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full News Article</title>
+    <link rel="stylesheet" href="sash.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="container">
+        <div class="content-wrapper">
+            <article class="full-news-article">
+                <div class="article-image-row">
+                    <img src="imgs/i2.jpg" alt="Image 1" class="side-by-side-image">
+                    <img src="imgs/s1.png" alt="Image 2" class="side-by-side-image">
+                </div>
+
+                <div class="analysis-section">
+                    <div class="bias-bar">
+                        <div class="bias-fill right" style="width: 28%;"></div>
+                        <div class="bias-fill neutral" style="width: 63%;"></div>
+                        <div class="bias-fill left" style="width: 9%;"></div>
+                    </div>
+                    <p class="bias-percentage">
+                        <span class="right-bias">28% Right</span> | 
+                        <span class="neutral-bias">63% Neutral</span> | 
+                        <span class="left-bias">9% Left</span>
+                    </p>
+
+                    <div class="truth-bar">
+                        <div class="truth-fill" style="width: 91%;"></div>
+                    </div>
+                    <p class="truth-percentage">Verification Score: 91% Verified</p>
+                </div>
+
+                <!-- Summarizer Widget -->
+                <div class="summarizer-widget">
+                    <button id="summarizeBtn">Summarize Article 🧠</button>
+                    <div id="summaryOutput" class="summary-output"></div>
+                </div>
+
+                <div class="verified-tag"></div>
+
+                <h1>MP Shashi Tharoor on Saturday defended his praise for Prime Minister Narendra Modi following his meeting with a former U.S. leader.</h1>
+                <p class="article-date">Published: February 20, 2025</p>
+                <p>Senior Congress leader and Member of Parliament Shashi Tharoor on Saturday defended his recent remarks praising Prime Minister Narendra Modi following the latter's meeting with a former U.S. President.</p>
+                <p>Tharoor clarified that his commendation was not a blanket endorsement of Modi’s politics, but rather an acknowledgment of the diplomatic skill displayed during the high-profile engagement. He emphasized that international diplomacy transcends domestic political rivalries, and it is in India’s national interest to recognize and support effective representation on the global stage. Tharoor further explained that praising a specific act of diplomacy should not be misinterpreted as political alignment, and reiterated the importance of mature, bipartisan acknowledgment of moments when India’s stature.</p>
+            </article>
+
+            <aside class="similar-articles">
+                <h2>Similar News</h2>
+                <div class="similar-article-card">
+                    <img src="imgs/s2.png" alt="Related news image">
+                    <a href="article2.html">Tharoor Calls for More Civil Political Discourse in Parliament</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/s5.png" alt="Related news image">
+                    <a href="article3.html">Parliament Passes Key Electoral Reform Bill Amid Debate</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/s3.png" alt="Related news image">
+                    <a href="article2.html">PM Modi Highlights Strategic Ties During US Visit5</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/s4.png" alt="Related news image">
+                    <a href="article3.html">Farmers Protest Rekindles as New Agricultural Bill Proposed</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/opo.png" alt="Related news image">
+                    <a href="article4.html">Opposition Leaders Unite to Challenge</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/de.png" alt="Related news image">
+                    <a href="article5.html">Deported fugitives face charges in India</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/cr.png" alt="Related news image">
+                    <a href="article6.html">Cross-border crime ring busted in Chandigarh</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/image2.png" alt="Related news image">
+                    <a href="article2.html">New Foreign Policy Strategy Outlined in Annual Summit</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/hu.png" alt="Related news image">
+                    <a href="article3.html">International Human Rights Council Condemns Violations in Myanmar</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/va.png" alt="Related news image">
+                    <a href="article2.html">UN to Expand Global Vaccine Distribution for Developing Countries</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/gl.png" alt="Related news image">
+                    <a href="article3.html">Global Trade Talks to Tackle Post-Pandemic Economic Recovery</a>
+                </div>
+                <div class="similar-article-card">
+                    <img src="imgs/su.png" alt="Related news image">
+                    <a href="article4.html">International Summit on Cybersecurity Tackles Global Threats</a>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Link JS for summarizer -->
+    <script src="article.js"></script>
+</body>
+</html>
+

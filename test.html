@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEWZON API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f4f4f9;
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>NEWZON API Tester</h1>
+    <textarea id="inputText" placeholder="Enter text here..."></textarea>
+    <br>
+    <button onclick="predictBias()">Predict Political Leaning</button>
+    <button onclick="summarizeText()">Summarize Text</button>
+
+    <div id="biasResult" class="result"></div>
+    <div id="summaryResult" class="result"></div>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:5000";
+
+        async function predictBias() {
+            const text = document.getElementById("inputText").value;
+            if (!text) return alert("Please enter some text.");
+
+            const res = await fetch(`${API_BASE}/predict`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ text })
+            });
+            const data = await res.json();
+            document.getElementById("biasResult").innerHTML = 
+                `<h3>Political Leaning:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+
+        async function summarizeText() {
+            const text = document.getElementById("inputText").value;
+            if (!text) return alert("Please enter some text.");
+
+            const res = await fetch(`${API_BASE}/summarize`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ text })
+            });
+            const data = await res.json();
+            document.getElementById("summaryResult").innerHTML = 
+                `<h3>Summary:</h3><p>${data.summary || data.error}</p>`;
+        }
+    </script>
+</body>
+</html>

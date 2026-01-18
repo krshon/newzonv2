@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NEWZON | Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0a0e27;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .orb1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #ff6b6b, #ee5a6f);
+      top: -150px;
+      left: -150px;
+      animation-delay: 0s;
+    }
+
+    .orb2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #4ecdc4, #44a08d);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: 5s;
+    }
+
+    .orb3 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, #f7b731, #fa8231);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(100px, -50px) scale(1.1); }
+      50% { transform: translate(-50px, 100px) scale(0.9); }
+      75% { transform: translate(50px, 50px) scale(1.05); }
+    }
+
+    /* Particle System */
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: particle-float linear infinite;
+    }
+
+    @keyframes particle-float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.4;
+      }
+      90% {
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-100px) translateX(var(--drift));
+        opacity: 0;
+      }
+    }
+
+    .auth-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .auth-card {
+      background: rgba(15, 20, 45, 0.7);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px 35px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+                  0 0 100px rgba(78, 205, 196, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: card-entrance 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #f7b731, #ff6b6b);
+      border-radius: 20px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+      background-size: 400% 400%;
+      animation: gradient-shift 3s ease infinite;
+    }
+
+    .auth-card:hover::before {
+      opacity: 0.3;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes card-entrance {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .auth-card h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 48px;
+      text-align: center;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #fff, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: title-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes title-glow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(78, 205, 196, 0.5)); }
+      50% { filter: drop-shadow(0 0 20px rgba(78, 205, 196, 0.8)); }
+    }
+
+    .tagline {
+      text-align: center;
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-bottom: 25px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tab-indicator {
+      position: absolute;
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(135deg, #4ecdc4, #44a08d);
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+      z-index: 0;
+    }
+
+    .tab-indicator.signup {
+      transform: translateX(100%);
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 12px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tabs button.active {
+      color: white;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input {
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      outline: none;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 14px;
+      color: white;
+      transition: all 0.3s;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    input:focus {
+      border-color: #4ecdc4;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .primary-btn {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .primary-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .msg {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 13px;
+      opacity: 0.9;
+      animation: fade-in 0.3s;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 0.9; transform: translateY(0); }
+    }
+
+    /* News ticker */
+    .news-ticker {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 10px 0;
+      overflow: hidden;
+      z-index: 5;
+      border-top: 1px solid rgba(78, 205, 196, 0.3);
+    }
+
+    .ticker-content {
+      display: flex;
+      animation: ticker-scroll 30s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-item {
+      padding: 0 40px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .ticker-item::before {
+      content: '●';
+      color: #4ecdc4;
+      margin-right: 10px;
+    }
+
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Animated Background -->
+  <div class="bg-animation">
+    <div class="gradient-orb orb1"></div>
+    <div class="gradient-orb orb2"></div>
+    <div class="gradient-orb orb3"></div>
+    <div id="particles"></div>
+  </div>
+
+  <!-- News Ticker -->
+  <div class="news-ticker">
+    <div class="ticker-content">
+<span class="ticker-item">Markets: Global stocks rally as tech leads gains, oil climbs</span>
+<span class="ticker-item">Economy: IMF highlights resilience in growth forecasts amid trade shocks</span>
+<span class="ticker-item">Tech: Cisco announces annual AI summit for February 2026</span>
+<span class="ticker-item">Politics: Global leaders discuss trade, growth & cooperation</span>
+<span class="ticker-item">Sports: 2025 NWSL Championship sets historic viewership record</span>
+<span class="ticker-item">Sports: NCAA college football popularity surges with record TV minutes</span>
+<span class="ticker-item">Markets: Tin price bubble raises concerns in global commodities</span>
+<span class="ticker-item">Economy: Goldman Sachs forecasts blockbuster 2026 M&A activity</span>
+
+    </div>
+  </div>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <h1>NEWZON</h1>
+      <p class="tagline">Truth • Bias • Perspective</p>
+
+      <div class="tabs">
+        <div class="tab-indicator" id="tabIndicator"></div>
+        <button id="loginTab" class="active">Login</button>
+        <button id="signupTab">Sign Up</button>
+      </div>
+
+      <!-- LOGIN -->
+      <form id="loginForm">
+        <input id="loginEmail" type="email" placeholder="Email" required />
+        <input id="loginPassword" type="password" placeholder="Password" required />
+        <button type="submit" class="primary-btn">Login</button>
+      </form>
+
+      <!-- SIGNUP -->
+      <form id="signupForm" class="hidden">
+        <input id="signupEmail" type="email" placeholder="Email" required />
+        <input id="signupPassword" type="password" placeholder="Password (min 6 chars)" required />
+        <button type="submit" class="primary-btn">Create Account</button>
+      </form>
+
+      <p id="msg" class="msg"></p>
+    </div>
+  </div>
+
+  <script>
+    // Create particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      p.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+      particlesContainer.appendChild(p);
+    }
+
+    // Tab switching
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const tabIndicator = document.getElementById('tabIndicator');
+    const msg = document.getElementById('msg');
+
+    loginTab.addEventListener('click', () => {
+      loginTab.classList.add('active');
+      signupTab.classList.remove('active');
+      loginForm.classList.remove('hidden');
+      signupForm.classList.add('hidden');
+      tabIndicator.classList.remove('signup');
+      msg.textContent = '';
+    });
+
+    signupTab.addEventListener('click', () => {
+      signupTab.classList.add('active');
+      loginTab.classList.remove('active');
+      signupForm.classList.remove('hidden');
+      loginForm.classList.add('hidden');
+      tabIndicator.classList.add('signup');
+      msg.textContent = '';
+    });
+
+    // Form handlers (placeholder - connect to your auth.js logic)
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      msg.textContent = 'Login functionality - connect to your auth.js';
+      msg.style.color = '#4ecdc4';
+    });
+
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      msg.textContent = 'Signup functionality - connect to your auth.js';
+      msg.style.color = '#4ecdc4';
+    });
+  </script>
+</body>
+</html>

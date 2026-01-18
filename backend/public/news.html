@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWZON Live News</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+    h1 { font-family: 'Bebas Neue', cursive; text-align: center; margin-bottom: 30px; }
+    #news-feed { display: flex; flex-direction: column; gap: 20px; max-width: 900px; margin: auto; }
+    .article { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .title { font-weight: bold; font-size: 1.2em; margin-bottom: 5px; }
+    .source { font-size: 0.85em; color: #555; margin-bottom: 10px; }
+    .content { margin-bottom: 10px; }
+    a { color: #0077cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; border-radius: 5px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>NEWZON Live News</h1>
+  <div id="news-feed">
+    <p>Loading news...</p>
+  </div>
+
+  <script>
+    const apiKey = "5a520f6945b6453aa59f058782638025"; // direct NewsAPI key
+    const url = `https://newsapi.org/v2/top-headlines?sources=bbc-news&pageSize=5&apiKey=${apiKey}`;
+
+    async function loadNews() {
+      const feed = document.getElementById("news-feed");
+      feed.innerHTML = "<p>Loading news...</p>";
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        feed.innerHTML = "";
+
+        if (!data.articles || data.articles.length === 0) {
+          feed.innerHTML = "<p>No news found.</p>";
+          return;
+        }
+
+        data.articles.forEach(article => {
+          const div = document.createElement("div");
+          div.className = "article";
+
+          div.innerHTML = `
+            ${article.urlToImage ? `<img src="${article.urlToImage}" alt="Image">` : ""}
+            <div class="title">${article.title}</div>
+            <div class="source">${article.source.name} | ${new Date(article.publishedAt).toLocaleString()}</div>
+            <div class="content">${article.description || ""}</div>
+            <a href="${article.url}" target="_blank">Read more</a>
+          `;
+          feed.appendChild(div);
+        });
+
+      } catch (err) {
+        console.error("Error fetching news:", err);
+        feed.innerHTML = "<p>⚠️ Failed to load news. Check your API key or CORS policy.</p>";
+      }
+    }
+
+    window.onload = loadNews;
+  </script>
+</body>
+</html>

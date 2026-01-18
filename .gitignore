@@ -1,0 +1,37 @@
+# Environments
+venv/
+newzonenv/
+
+# Node (ignore node_modules everywhere)
+node_modules/
+**/node_modules/
+
+# Secrets
+.env
+
+# ML models
+bias_model/
+models/
+*.bin
+*.pt
+*.h5
+
+# Generated / runtime files
+__pycache__/
+newzon_reel_ai/uploads/
+newzon_reel_ai/srt/
+newzon_reel_ai/last_result.json
+
+# Editor
+.vscode/
+
+# Docs (optional)
+howtorun.txt
+links.txt
+.env
+*.env
+backend/key.env
+.env
+*.env
+backend/key.env
+summarizer/backend/.env

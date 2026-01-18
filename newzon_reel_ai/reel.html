@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEWZON Reel Political Analyzer</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #ffffff;
+            font-family: "Inter", sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            padding-top: 30px;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+
+        .upload-card {
+            width: 450px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        input[type="file"] {
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            width: 90%;
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+
+        button {
+            width: 90%;
+            margin-top: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(90deg, #ff004f, #ff2266);
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+            background: linear-gradient(90deg, #ff2266, #ff004f);
+        }
+
+        .reel-preview {
+            width: 55%;
+            margin: 35px auto;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .reel-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.4);
+            display: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            letter-spacing: 1px;
+        }
+
+        .result-card {
+            width: 80%;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .result-card h3 {
+            margin-top: 0;
+            font-size: 22px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .confidence-box {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+        }
+
+        .label-tag {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🎬 NEWZON Reel Political Analyzer</h1>
+
+<div class="upload-card">
+    <input type="file" id="reelFile" accept="video/mp4">
+    <button onclick="analyzeReel()">Analyze Reel</button>
+</div>
+
+<div class="reel-preview">
+    <video id="previewVideo" controls></video>
+    <div id="reelLabel" class="reel-badge"></div>
+</div>
+
+<div id="analysisResult" class="result-card"></div>
+
+<script>
+async function analyzeReel() {
+
+    const fileInput = document.getElementById("reelFile");
+    const videoElement = document.getElementById("previewVideo");
+    const badge = document.getElementById("reelLabel");
+    const resultBox = document.getElementById("analysisResult");
+
+    if (!fileInput.files[0]) {
+        alert("Please select a video first.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    videoElement.src = URL.createObjectURL(file);
+
+    badge.style.display = "inline-block";
+    badge.textContent = "Analyzing…";
+    badge.style.background = "rgba(150,150,150,0.8)";
+
+    const form = new FormData();
+    form.append("file", file);
+
+    let data;
+
+    try {
+        const res = await fetch("http://127.0.0.1:8000/upload", {
+            method: "POST",
+            body: form
+        });
+        data = await res.json();
+    } catch (err) {
+        badge.textContent = "ERROR";
+        badge.style.background = "rgba(255,0,0,0.9)";
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "<b>Server Error:</b> Backend unreachable.";
+        return;
+    }
+
+    const label = data.label || "Unknown";
+    const scores = data.scores || [0,0,0];
+    const text = data.text || "Transcript unavailable.";
+
+    // Badge color theme
+    if (label === "Left Wing") badge.style.background = "rgba(0,120,255,0.85)";
+    else if (label === "Right Wing") badge.style.background = "rgba(255,0,0,0.85)";
+    else if (label === "Center") badge.style.background = "rgba(255,215,0,0.85)";
+    else badge.style.background = "rgba(140,140,140,0.85)";
+
+    badge.textContent = label;
+
+    // Result card
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+        <h3>AI Analysis Summary</h3>
+
+        <div><span class="label-tag">Predicted Political Leaning:</span><br>
+        <strong style="font-size: 20px;">${label}</strong></div>
+
+        <div class="confidence-box">
+            <span class="label-tag">Confidence Breakdown:</span><br>
+            Left Wing: ${(scores[0] * 100).toFixed(2)}%<br>
+            Right Wing: ${(scores[1] * 100).toFixed(2)}%<br>
+            Center: ${(scores[2] * 100).toFixed(2)}%
+        </div>
+
+        <br>
+
+        <span class="label-tag">Transcript Snippet:</span><br>
+        ${text.slice(0, 600)}...
+    `;
+}
+</script>
+
+</body>
+</html>

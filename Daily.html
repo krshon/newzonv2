@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEWZON - Top Headlines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #141414;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(20, 20, 20, 0.95);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .tagline {
+            color: #8a8a8a;
+            font-size: 0.875rem;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #e0e0e0;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: #252525;
+            border-color: #3a3a3a;
+        }
+
+        .control-btn:active {
+            transform: scale(0.98);
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #141414;
+            border: 1px solid #2a2a2a;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .news-card {
+            min-width: 100%;
+            background: #141414;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .card-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: #b0b0b0;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .card-title {
+            font-size: 2rem;
+            color: #ffffff;
+            line-height: 1.3;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .card-summary {
+            font-size: 1.05rem;
+            color: #a0a0a0;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 20px;
+            color: #6a6a6a;
+            font-size: 0.875rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .like-btn {
+            background: #ffffff;
+            border: none;
+            color: #0a0a0a;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .like-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        .like-btn.liked {
+            background: #ff4444;
+            color: white;
+        }
+
+        .like-count {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .read-more-btn {
+            background: transparent;
+            border: 1px solid #3a3a3a;
+            color: #e0e0e0;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .read-more-btn:hover {
+            background: #1a1a1a;
+            border-color: #4a4a4a;
+            transform: translateY(-1px);
+        }
+
+        .share-btn {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #b0b0b0;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #252525;
+            border-color: #3a3a3a;
+            transform: translateY(-1px);
+        }
+
+        .nav-arrows {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            padding: 0 20px;
+        }
+
+        .arrow-btn {
+            background: #ffffff;
+            border: none;
+            color: #0a0a0a;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            pointer-events: all;
+        }
+
+        .arrow-btn:hover {
+            transform: scale(1.05);
+            background: #f0f0f0;
+        }
+
+        .indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 0;
+            background: #141414;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .indicator {
+            width: 40px;
+            height: 3px;
+            background: #2a2a2a;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            background: #ffffff;
+            width: 60px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 30px;
+            padding: 24px;
+            background: #141414;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .stat-label {
+            color: #6a6a6a;
+            font-size: 0.875rem;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            background: #141414;
+            border-top: 1px solid #2a2a2a;
+            color: #6a6a6a;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-image {
+                height: 300px;
+            }
+
+            .card-content {
+                padding: 25px;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .card-summary {
+                font-size: 0.95rem;
+            }
+
+            .card-actions {
+                flex-direction: column;
+            }
+
+            .arrow-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .trending-badge {
+            animation: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>NEWZON</h1>
+            <p class="tagline">Breaking News & Top Stories</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">
+                Top 5 Headlines Today
+            </h2>
+            <div class="controls">
+                <button class="control-btn" onclick="toggleAutoplay()">Pause</button>
+            </div>
+        </div>
+
+        <div class="carousel-wrapper">
+            <div class="carousel-container" id="carousel">
+                <!-- Card 1 -->
+                <div class="news-card">
+                    <img src="imgs/e4.jpg" alt="Technology News" class="card-image">
+                    <div class="card-content">
+                        <span class="card-badge trending-badge">TRENDING</span>
+                        <h3 class="card-title">AI Revolution: ChatGPT-5 Launches with Groundbreaking Capabilities</h3>
+                        <p class="card-summary">OpenAI unveils its most advanced language model yet, featuring enhanced reasoning, multimodal understanding, and real-time learning capabilities. The tech industry is calling it a "paradigm shift" in artificial intelligence development.</p>
+                        <div class="card-meta">
+                            <span>2 hours ago</span>
+                            <span>Technology</span>
+                            <span>2.4M views</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="like-btn" onclick="toggleLike(this, 0)">
+                                Like <span class="like-count">15.2K</span>
+                            </button>
+                            <button class="read-more-btn">Read Full Story</button>
+                            <button class="share-btn">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=450&fit=crop" alt="Sports News" class="card-image">
+                    <div class="card-content">
+                        <span class="card-badge">BREAKING</span>
+                        <h3 class="card-title">Historic Comeback: Underdog Team Wins Championship After 50 Years</h3>
+                        <p class="card-summary">In an incredible display of determination and skill, the Phoenix Suns secure their first NBA championship since 1975. The victory caps off a remarkable season that saw the team overcome numerous obstacles and defy all expectations.</p>
+                        <div class="card-meta">
+                            <span>5 hours ago</span>
+                            <span>Sports</span>
+                            <span>3.8M views</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="like-btn" onclick="toggleLike(this, 1)">
+                                Like <span class="like-count">28.5K</span>
+                            </button>
+                            <button class="read-more-btn">Read Full Story</button>
+                            <button class="share-btn">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=450&fit=crop" alt="Space News" class="card-image">
+                    <div class="card-content">
+                        <span class="card-badge">EXCLUSIVE</span>
+                        <h3 class="card-title">NASA Discovers Potential Signs of Life on Jupiter's Moon Europa</h3>
+                        <p class="card-summary">Scientists analyzing data from the Europa Clipper mission have detected unusual chemical signatures in the moon's subsurface ocean. The findings suggest conditions that could support microbial life, marking a major milestone in astrobiology.</p>
+                        <div class="card-meta">
+                            <span>8 hours ago</span>
+                            <span>Science</span>
+                            <span>5.2M views</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="like-btn" onclick="toggleLike(this, 2)">
+                                Like <span class="like-count">42.1K</span>
+                            </button>
+                            <button class="read-more-btn">Read Full Story</button>
+                            <button class="share-btn">Share</button>
+                        </div>
+                            <button class="share-btn">📤 Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=450&fit=crop" alt="Business News" class="card-image">
+                    <div class="card-content">
+                        <span class="card-badge">BUSINESS</span>
+                        <h3 class="card-title">Stock Market Reaches All-Time High Amid Economic Recovery</h3>
+                        <p class="card-summary">Global markets celebrate unprecedented growth as major indices hit record levels. Economists attribute the surge to strong corporate earnings, technological innovation, and renewed consumer confidence following recent economic challenges.</p>
+                        <div class="card-meta">
+                            <span>⏰ 12 hours ago</span>
+                            <span>💹 Finance</span>
+                            <span>👁️ 1.9M views</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="like-btn" onclick="toggleLike(this, 3)">
+                                ❤️ Like <span class="like-count">18.7K</span>
+                            </button>
+                            <button class="read-more-btn">📖 Read Full Story</button>
+                            <button class="share-btn">📤 Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1496449903678-68ddcb189a24?w=1200&h=450&fit=crop" alt="Entertainment News" class="card-image">
+                    <div class="card-content">
+                        <span class="card-badge">ENTERTAINMENT</span>
+                        <h3 class="card-title">Taylor Swift Announces Surprise World Tour Extension Through 2026</h3>
+                        <p class="card-summary">Pop superstar Taylor Swift stuns fans worldwide with the announcement of 50 additional concert dates. The extended Eras Tour will include new destinations across South America, Asia, and Australia, with tickets going on sale next month.</p>
+                        <div class="card-meta">
+                            <span>⏰ 1 day ago</span>
+                            <span>🎤 Music</span>
+                            <span>👁️ 6.7M views</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="like-btn" onclick="toggleLike(this, 4)">
+                                ❤️ Like <span class="like-count">89.3K</span>
+                            </button>
+                            <button class="read-more-btn">📖 Read Full Story</button>
+                            <button class="share-btn">📤 Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-arrows">
+                <button class="arrow-btn" onclick="prevSlide()">‹</button>
+                <button class="arrow-btn" onclick="nextSlide()">›</button>
+            </div>
+        </div>
+
+        <div class="indicators" id="indicators">
+            <div class="indicator active" onclick="goToSlide(0)"></div>
+            <div class="indicator" onclick="goToSlide(1)"></div>
+            <div class="indicator" onclick="goToSlide(2)"></div>
+            <div class="indicator" onclick="goToSlide(3)"></div>
+            <div class="indicator" onclick="goToSlide(4)"></div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="totalViews">14.0M</div>
+                <div class="stat-label">Total Views Today</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalLikes">193.8K</div>
+                <div class="stat-label">Total Likes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Top Stories</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 NEWZON. All Rights Reserved. | Stay Informed, Stay Ahead</p>
+    </footer>
+
+<script>
+    let currentIndex = 0;
+    const totalSlides = 5;
+    let autoplayInterval;
+    let isPlaying = true;
+    const likeCounts = [15200, 28500, 42100, 18700, 89300];
+
+    function updateCarousel() {
+        const carousel = document.getElementById('carousel');
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+        // Update indicators
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentIndex);
+        });
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        updateCarousel();
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        updateCarousel();
+    }
+
+    function goToSlide(index) {
+        currentIndex = index;
+        updateCarousel();
+    }
+
+    function toggleLike(button, index) {
+        button.classList.toggle('liked');
+        const likeCountSpan = button.querySelector('.like-count');
+
+        if (button.classList.contains('liked')) {
+            likeCounts[index]++;
+            button.innerHTML = `Liked <span class="like-count">${formatNumber(likeCounts[index])}</span>`;
+        } else {
+            likeCounts[index]--;
+            button.innerHTML = `Like <span class="like-count">${formatNumber(likeCounts[index])}</span>`;
+        }
+
+        updateTotalLikes();
+    }
+
+    function formatNumber(num) {
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toString();
+    }
+
+    function updateTotalLikes() {
+        const total = likeCounts.reduce((a, b) => a + b, 0);
+        document.getElementById('totalLikes').textContent = formatNumber(total);
+    }
+
+    function startAutoplay() {
+        autoplayInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoplay() {
+        clearInterval(autoplayInterval);
+    }
+
+    function toggleAutoplay() {
+        const btn = event.target;
+        if (isPlaying) {
+            stopAutoplay();
+            btn.textContent = 'Play';
+            isPlaying = false;
+        } else {
+            startAutoplay();
+            btn.textContent = 'Pause';
+            isPlaying = true;
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const carousel = document.getElementById('carousel');
+
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) nextSlide();
+        if (touchEndX > touchStartX + 50) prevSlide();
+    }
+
+    // Start autoplay on load
+    startAutoplay();
+</script>
+
+    
+</body>
+</html>
