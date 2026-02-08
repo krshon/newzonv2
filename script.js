@@ -42,7 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
         newsContainer.appendChild(articleElement);
       }
     });
-  
+  credibilityBox.style.background =
+  finalCredibility > 75
+    ? "linear-gradient(135deg,#22c55e,#16a34a)"
+    : finalCredibility > 50
+    ? "linear-gradient(135deg,#facc15,#eab308)"
+    : "linear-gradient(135deg,#ef4444,#dc2626)";
+
     // ===== WEATHERSTACK API (Weather) =====
     const WEATHERSTACK_API_KEY = "5242c8214535cc02f96e09e136025ea";
   

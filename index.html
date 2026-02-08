@@ -3,14 +3,27 @@
 <head>
 <script type="module">
   import { auth } from "./auth/firebase.js";
-  import { onAuthStateChanged } from "firebase/auth";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  let initialized = false;
 
   onAuthStateChanged(auth, (user) => {
+    if (!initialized) {
+      initialized = true;
+      return; // ⛔ wait for second call
+    }
+
     if (!user) {
-      window.location.href = "/auth/auth.html";
+      window.location.replace("/auth/auth.html");
     }
   });
 </script>
+  <script>
+    console.log("INDEX LOADED", Date.now());
+  </script>
+
+
+
 
 
 
@@ -30,7 +43,7 @@
         <li><a href="daily.html">TOP 5</a></li>
         <li><a href="tech.html">TECH</a></li>
         <li><a href="bus.html">BUSINESS</a></li>
-        <li><a href="article.html">BETA</a></li>
+        <li><a href="article/article.html">BETA</a></li>
         <li><a href="test.html">MODELS</a></li>
         <li><a href="newzon-fake/check.html">TRUTH</a></li>
         <li><a href="About.html">ABOUT</a></li>
@@ -256,24 +269,23 @@
   </div>
   <!-- STOCK + WEATHER (UNCHANGED) -->
   <script>
-    function fetchStockData() {
-      const stockUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=YOUR_STOCK_API_KEY`;
-      fetch(stockUrl)
-        .then(response => response.json())
-        .then(data => {
-          const globalQuote = data["Global Quote"];
-          if (globalQuote) {
-            const price = globalQuote["05. price"];
-            document.getElementById("stock-data").textContent = `AAPL: $${parseFloat(price).toFixed(2)}`;
-          } else {
-            document.getElementById("stock-data").textContent = "Stock data unavailable.";
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching stock data:', error);
-          document.getElementById("stock-data").textContent = "Error loading stock data.";
-        });
-    }
+function fetchStockData() {
+  const stockUrl =
+    `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=YOUR_REAL_KEY_HERE`;
+
+  fetch(stockUrl)
+    .then(res => res.json())
+    .then(data => {
+      const q = data["Global Quote"];
+      if (q && q["05. price"]) {
+        document.getElementById("stock-data").textContent =
+          `AAPL: $${parseFloat(q["05. price"]).toFixed(2)}`;
+      } else {
+        document.getElementById("stock-data").textContent =
+          "Stock data unavailable.";
+      }
+    });
+}
 
     function fetchWeatherData() {
       const city = "New York";
@@ -327,22 +339,19 @@
                 <h2><a href="${article.url}" target="_blank" class="news-title-link">${article.title}</a></h2>
                 <p class="news-summary">${article.description || 'No description available'}</p>
                 <div class="info-boxes">
-                  <span class="truth-score-box">--%</span>
-                  <div class="political-bias-bar">
-                    <div class="political-left" style="width: 33%;"></div>
-                    <div class="political-neutral" style="width: 34%;"></div>
-                    <div class="political-right" style="width: 33%;"></div>
-                    <div class="bias-labels">
-                      <span class="bias-label left-label">L</span>
-                      <span class="bias-label center-label">C</span>
-                      <span class="bias-label right-label">R</span>
-                    </div>
-                  </div>
-                </div>
+<div class="bias-row">
+  <span class="truth-score-box">--%</span>
+
+  <div class="political-bias-bar detailed">
+    <div class="bias-segment political-left"></div>
+    <div class="bias-segment political-neutral"></div>
+    <div class="bias-segment political-right"></div>
+  </div>
+</div>
+
 
                 <div class="credibility-meter">
-                  <strong>Credibility:</strong>
-                  <span class="credibility-score">--%</span>
+                <span class="credibility-score"></span>
                 </div>
 
                 <button class="fact-btn">🔍 Fact Check</button>
@@ -413,13 +422,31 @@
         truthBox.style.background = color;
         truthBox.style.color = "white";
 
-        resultDiv.innerHTML = `
-          <p style="color:${color}; font-weight:bold;">
-            ${labelText} (${data.truth_percent}% credibility)
-          </p>
-          <p>Sources found: ${data.source_count}</p>
-          <small>${data.sources.join(", ")}</small>
-        `;
+resultDiv.innerHTML = `
+  <div class="insight-layer ${data.final_label.toLowerCase()}">
+    
+    <div class="insight-top">
+      <div class="verdict">
+        <span class="check">✔</span>
+        <span class="verdict-text">Likely True</span>
+      </div>
+
+      <div class="confidence-pill">
+        ${data.truth_percent}%
+      </div>
+    </div>
+
+    <div class="insight-meta">
+      Sources verified: <strong>${data.source_count}</strong>
+    </div>
+
+    <div class="insight-sources">
+      ${data.sources.join(" · ")}
+    </div>
+
+  </div>
+`;
+
 
         const biasConfidence = parseFloat(card.dataset.biasConfidence || "50");
         const finalCredibility = Math.round((data.truth_percent * 0.7) + (biasConfidence * 0.3));
@@ -454,9 +481,6 @@ async function analyzeBias(articleElement, text) {
     const centerBar = articleElement.querySelector(".political-neutral");
     const rightBar = articleElement.querySelector(".political-right");
 
-    const leftLabel = articleElement.querySelector(".left-label");
-    const centerLabel = articleElement.querySelector(".center-label");
-    const rightLabel = articleElement.querySelector(".right-label");
   function normalize(value) {
   return Math.max(value, 3); // Minimum 3% so even tiny values are visible
 }
@@ -465,9 +489,10 @@ leftBar.style.width = normalize(left) + "%";
 centerBar.style.width = normalize(center) + "%";
 rightBar.style.width = normalize(right) + "%";
 
-leftBar.setAttribute("data-tooltip", "Left: " + left.toFixed(2) + "%");
-centerBar.setAttribute("data-tooltip", "Center: " + center.toFixed(2) + "%");
-rightBar.setAttribute("data-tooltip", "Right: " + right.toFixed(2) + "%");
+leftBar.title = `Left: ${left.toFixed(2)}%`;
+centerBar.title = `Center: ${center.toFixed(2)}%`;
+rightBar.title = `Right: ${right.toFixed(2)}%`;
+
 
   } catch (err) {
     console.error("Bias API error:", err);

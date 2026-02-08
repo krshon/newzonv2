@@ -49,6 +49,53 @@ app.get("/api/news", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch news" });
   }
 });
+// Stocks
+app.get("/api/stocks", async (req, res) => {
+  try {
+    const symbols = [
+  "AAPL",   // Apple
+  "MSFT",   // Microsoft
+  "GOOGL",  // Alphabet
+  "AMZN",   // Amazon
+  "META",   // Meta (Facebook)
+  "NVDA",   // NVIDIA
+  "TSLA",   // Tesla
+  "NFLX",   // Netflix
+  "INTC",   // Intel
+  "AMD",    // AMD
+  "ORCL",   // Oracle
+  "IBM",    // IBM
+  "CSCO",   // Cisco
+  "ADBE",   // Adobe
+  "UBER"    // Uber
+];
+
+    const results = [];
+
+    for (const symbol of symbols) {
+      const url =
+        `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${process.env.STOCK_API_KEY}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data["Global Quote"] && data["Global Quote"]["05. price"]) {
+        results.push({
+          symbol,
+          price: parseFloat(data["Global Quote"]["05. price"]).toFixed(2)
+        });
+      }
+
+      // IMPORTANT: rate limit (5/min)
+      await new Promise(r => setTimeout(r, 13000));
+    }
+
+    res.json(results);
+  } catch {
+    res.status(500).json({ error: "Failed to fetch stocks" });
+  }
+});
+
 
 // Bias
 app.post("/api/bias", async (req, res) => {
