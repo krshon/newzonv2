@@ -89,15 +89,15 @@ of the NEWZON platform.
 ### Bias Visualization
 
 <p align="center">
-  <img src="images/image.png" alt="Bias Visualization" width="900"/>
+  <img src="images/abouts.png" alt="Bias Visualization" width="900"/>
 </p>
 
 ---
 
-### Video Summarizer
+### Article View
 
 <p align="center">
-  <img src="images/reel.png" alt="News Details" width="900"/>
+  <img src="images/article.png" alt="News Details" width="900"/>
 </p>
 
 ---
