@@ -89,7 +89,7 @@ of the NEWZON platform.
 ### Bias Visualization
 
 <p align="center">
-  <img src="images/bias.png" alt="Bias Visualization" width="900"/>
+  <img src="images/image.png" alt="Bias Visualization" width="900"/>
 </p>
 
 ---
@@ -97,7 +97,7 @@ of the NEWZON platform.
 ### Video Summarizer
 
 <p align="center">
-  <img src="images/image.png" alt="News Details" width="900"/>
+  <img src="images/reel.png" alt="News Details" width="900"/>
 </p>
 
 ---
@@ -105,5 +105,5 @@ of the NEWZON platform.
 ### AI Reel Module (Experimental)
 
 <p align="center">
-  <img src="images/image.png" alt="AI Reel Module" width="900"/>
+  <img src="images/reel.png" alt="AI Reel Module" width="900"/>
 </p>
