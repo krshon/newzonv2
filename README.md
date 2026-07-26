@@ -65,8 +65,6 @@ and frontend implementation for reproducibility and review.
 
 ---
 
----
-
 ## Website Preview
 
 The following screenshots demonstrate the user interface and major workflows
@@ -80,7 +78,7 @@ of the NEWZON platform.
 
 ---
 
-### Article Analysis
+### Fake News Analysis
 
 <p align="center">
   <img src="images/analysis.png" alt="Article Analysis" width="900"/>
@@ -96,10 +94,10 @@ of the NEWZON platform.
 
 ---
 
-### News Details
+### Video Summarizer
 
 <p align="center">
-  <img src="images/article.png" alt="News Details" width="900"/>
+  <img src="images/image.png" alt="News Details" width="900"/>
 </p>
 
 ---
@@ -107,5 +105,5 @@ of the NEWZON platform.
 ### AI Reel Module (Experimental)
 
 <p align="center">
-  <img src="images/reels.png" alt="AI Reel Module" width="900"/>
+  <img src="images/image.png" alt="AI Reel Module" width="900"/>
 </p>
