@@ -64,3 +64,48 @@ and frontend implementation for reproducibility and review.
 - AI Reel module: **Experimental / exploratory**
 
 ---
+
+---
+
+## Website Preview
+
+The following screenshots demonstrate the user interface and major workflows
+of the NEWZON platform.
+
+### Home Dashboard
+
+<p align="center">
+  <img src="images/home.png" alt="Home Dashboard" width="900"/>
+</p>
+
+---
+
+### Article Analysis
+
+<p align="center">
+  <img src="images/analysis.png" alt="Article Analysis" width="900"/>
+</p>
+
+---
+
+### Bias Visualization
+
+<p align="center">
+  <img src="images/bias.png" alt="Bias Visualization" width="900"/>
+</p>
+
+---
+
+### News Details
+
+<p align="center">
+  <img src="images/article.png" alt="News Details" width="900"/>
+</p>
+
+---
+
+### AI Reel Module (Experimental)
+
+<p align="center">
+  <img src="images/reels.png" alt="AI Reel Module" width="900"/>
+</p>
