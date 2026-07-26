@@ -94,6 +94,14 @@ of the NEWZON platform.
 
 ---
 
+### Newzon Summarizer
+
+<p align="center">
+  <img src="images/summ.png" alt="Bias Visualization" width="900"/>
+</p>
+
+---
+
 ### Article View
 
 <p align="center">
